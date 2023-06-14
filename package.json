@@ -8,13 +8,13 @@
     "build": "xcodebuild -project ios/CalendarsExample.xcodeproj build",
     "build:ts": "tsc",
     "build:dev": "tsc --noEmit",
+    "build:clean": "tsc --build --clean",
     "build:docs": "node ./scripts/build-docs.js",
     "release": "node ./scripts/release.js",
     "start": "react-native start",
     "ios": "react-native run-ios",
     "android": "react-native run-android",
     "xcode": "open ios/CalendarsExample.xcworkspace/",
-    "clean": "rm package-lock.json && rm -rf ./node_modules && npm i",
     "pod-install": "pod install --project-directory=ios"
   },
   "repository": {
