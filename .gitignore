@@ -5,8 +5,8 @@ yarn.lock
 .vscode
 package-lock.json
 
-*.d.ts
-*.js
+# *.d.ts
+# *.js
 
 # OSX
 #
