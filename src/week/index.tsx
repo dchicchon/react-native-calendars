@@ -1,110 +1,184 @@
-import XDate from 'xdate';
-import { useRef, useMemo, useCallback } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { View } from 'react-native';
-import { getPartialWeekDates, getWeekDates, sameMonth } from '../dateutils';
-import { parseDate, toMarkingFormat } from '../interface';
-import { getState } from '../day-state-manager';
-import { extractDayProps } from '../componentUpdater';
+import XDate from 'xdate';
+import InfiniteList from '../infinite-list';
+import Week from '../week';
+import WeekDaysNames from '../commons/WeekDaysNames';
+import { CalendarListProps } from '../calendar-list';
+import CalendarContext from './Context';
 import styleConstructor from './style';
-import { CalendarProps } from '../calendar';
-import Day from '../calendar/day';
-import { CalendarContextProps } from './Context';
+import { toMarkingFormat } from '../interface';
+import { extractCalendarProps } from '../componentUpdater';
+import constants from '../commons/constants';
+import { UpdateSources } from './commons';
+import { sameWeek } from '../dateutils';
+import { DateData } from '../types';
 
-export type WeekProps = CalendarProps & {
-  context?: CalendarContextProps;
-};
+export interface WeekCalendarProps extends CalendarListProps {
+  /** whether to have shadow/elevation for the calendar */
+  allowShadow?: boolean;
+  passedContext?: React.Context<any>;
+}
 
-// eslint-disable-next-line @typescript-eslint/expl`icit-module-boundary-types
-const Week = (props: WeekProps) => {
+const NUMBER_OF_PAGES = 50;
+const DEFAULT_PAGE_HEIGHT = 48;
+
+const WeekCalendar = (props: WeekCalendarProps) => {
   const {
-    theme,
     current,
-    firstDay,
-    hideExtraDays,
-    // markedDates,
-    onDayPress,
-    // onDayLongPress,
-    style: propsStyle,
-    numberOfDays = 1,
-    timelineLeftInset,
+    firstDay = 0,
+    markedDates,
+    allowShadow = true,
+    passedContext,
+    hideDayNames,
+    theme,
+    calendarWidth,
+    calendarHeight = DEFAULT_PAGE_HEIGHT,
     testID,
   } = props;
+  const context = useContext(passedContext || CalendarContext);
+  const { date, updateSource } = context;
   const style = useRef(styleConstructor(theme));
-
-  const disableDaySelection = useMemo(() => {
-    return !!numberOfDays && numberOfDays > 1;
-  }, [numberOfDays]);
-
-  const getWeek = useCallback(
-    (date?: string) => {
-      if (date) {
-        return getWeekDates(date, firstDay);
-      }
-    },
-    [firstDay]
+  const list = useRef();
+  const [items, setItems] = useState(
+    getDatesArray(current || date, firstDay, NUMBER_OF_PAGES)
   );
 
-  const partialWeekStyle = useMemo(() => {
-    return [style.current.partialWeek, { paddingLeft: timelineLeftInset }];
-  }, [timelineLeftInset]);
+  const extraData = {
+    current,
+    date: context.date,
+    firstDay,
+  };
 
-  const dayProps = extractDayProps(props);
-  const currXdate = useMemo(() => parseDate(current), [current]);
+  const containerWidth = calendarWidth || constants.screenWidth;
+  const weekStyle = useMemo(() => {
+    return [{ width: containerWidth }, props.style];
+  }, [containerWidth, props.style]);
 
-  const renderDay = (day: XDate, id: number) => {
-    // hide extra days
-    if (current && hideExtraDays) {
-      if (!sameMonth(day, currXdate)) {
-        return <View key={id} style={style.current.emptyDayContainer} />;
+  useEffect(() => {
+    if (updateSource !== UpdateSources.WEEK_SCROLL) {
+      const pageIndex = items.findIndex((item) => sameWeek(item, date, firstDay));
+      // @ts-expect-error
+      list.current?.scrollToOffset?.(pageIndex * containerWidth, 0, false);
+    }
+  }, [date]);
+
+  const onDayPress = useCallback(
+    (dateData: DateData) => {
+      context.setDate?.(dateData.dateString, UpdateSources.DAY_PRESS);
+      props.onDayPress?.(dateData);
+    },
+    [props.onDayPress]
+  );
+
+  const onPageChange = useCallback(
+    (pageIndex: number, _prevPage, { scrolledByUser }) => {
+      if (scrolledByUser) {
+        context?.setDate(items[pageIndex], UpdateSources.WEEK_SCROLL);
       }
-    }
-    const dayString = toMarkingFormat(day);
-    return (
-      <View style={style.current.dayContainer} key={id}>
-        <Day
-          {...dayProps}
-          testID={`${testID}.day_${dayString}`}
-          date={dayString}
-          state={getState(day, currXdate, props, disableDaySelection)}
-          onPress={onDayPress}
+    },
+    [items]
+  );
+
+  const reloadPages = useCallback(
+    (pageIndex) => {
+      const date = items[pageIndex];
+      setItems(getDatesArray(date, firstDay, NUMBER_OF_PAGES));
+    },
+    [items]
+  );
+
+  const renderItem = useCallback(
+    (_type: any, item: string) => {
+      const { allowShadow, ...calendarListProps } = props;
+      const { /* style,  */ ...others } = extractCalendarProps(calendarListProps);
+
+      const isSameWeek = sameWeek(item, date, firstDay);
+
+      return (
+        <Week
+          {...others}
+          key={item}
+          current={isSameWeek ? date : item}
+          firstDay={firstDay}
+          style={weekStyle}
+          markedDates={markedDates}
+          onDayPress={onDayPress}
+          context={context}
         />
-      </View>
-    );
-  };
-
-  const renderWeek = () => {
-    const dates =
-      numberOfDays > 1 ? getPartialWeekDates(current, numberOfDays) : getWeek(current);
-    const week: JSX.Element[] = [];
-
-    if (dates) {
-      const todayIndex = dates?.indexOf(parseDate(new Date())) || -1;
-      const sliced = dates.slice(todayIndex, numberOfDays);
-      const datesToRender = numberOfDays > 1 && todayIndex > -1 ? sliced : dates;
-      datesToRender.forEach((day: XDate | string, id: number) => {
-        const d = day instanceof XDate ? day : new XDate(day);
-        week.push(renderDay(d, id));
-      }, this);
-    }
-
-    return week;
-  };
+      );
+    },
+    [date, markedDates]
+  );
 
   return (
-    <View style={style.current.container} testID={`${testID}.week_${current}`}>
-      <View
-        style={[
-          style.current.week,
-          numberOfDays > 1 ? partialWeekStyle : undefined,
-          propsStyle,
-        ]}
-      >
-        {renderWeek()}
+    <View
+      testID={testID}
+      style={[
+        allowShadow && style.current.containerShadow,
+        !hideDayNames && style.current.containerWrapper,
+      ]}
+    >
+      {!hideDayNames && (
+        <View style={[style.current.week, style.current.weekCalendar]}>
+          <WeekDaysNames firstDay={firstDay} style={style.current.dayHeader} />
+        </View>
+      )}
+      <View>
+        <InfiniteList
+          key="week-list"
+          isHorizontal
+          ref={list}
+          data={items}
+          renderItem={renderItem}
+          reloadPages={reloadPages}
+          onReachNearEdgeThreshold={Math.round(NUMBER_OF_PAGES * 0.4)}
+          extendedState={extraData}
+          style={style.current.container}
+          initialPageIndex={NUMBER_OF_PAGES}
+          pageHeight={calendarHeight}
+          pageWidth={containerWidth}
+          onPageChange={onPageChange}
+          scrollViewProps={{
+            showsHorizontalScrollIndicator: false,
+          }}
+        />
       </View>
     </View>
   );
 };
 
-export default Week;
+export default WeekCalendar;
 
-Week.displayName = 'Week';
+// function getDate({current, context, firstDay = 0}: WeekCalendarProps, weekIndex: number) {
+function getDate(date: string, firstDay: number, weekIndex: number) {
+  // const d = new XDate(current || context.date);
+  const d = new XDate(date);
+  // get the first day of the week as date (for the on scroll mark)
+  let dayOfTheWeek = d.getDay();
+  if (dayOfTheWeek < firstDay && firstDay > 0) {
+    dayOfTheWeek = 7 + dayOfTheWeek;
+  }
+
+  // leave the current date in the visible week as is
+  const dd = weekIndex === 0 ? d : d.addDays(firstDay - dayOfTheWeek);
+  const newDate = dd.addWeeks(weekIndex);
+  return toMarkingFormat(newDate);
+}
+
+// function getDatesArray(args: WeekCalendarProps, numberOfPages = NUMBER_OF_PAGES) => {
+function getDatesArray(date: string, firstDay: number, numberOfPages = NUMBER_OF_PAGES) {
+  const array = [];
+  for (let index = -numberOfPages; index <= numberOfPages; index++) {
+    const d = getDate(date, firstDay, index);
+    array.push(d);
+  }
+  return array;
+}

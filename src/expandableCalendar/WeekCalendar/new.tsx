@@ -1,50 +1,71 @@
-import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react';
-import {View} from 'react-native';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { View } from 'react-native';
 import XDate from 'xdate';
 
 import InfiniteList from '../../infinite-list';
 import Week from '../week';
 import WeekDaysNames from '../../commons/WeekDaysNames';
-import {CalendarListProps} from '../../calendar-list';
+import { CalendarListProps } from '../../calendar-list';
 import CalendarContext from '../../expandableCalendar/Context';
 import styleConstructor from '../style';
-import {toMarkingFormat} from '../../interface';
-import {extractCalendarProps} from '../../componentUpdater';
+import { toMarkingFormat } from '../../interface';
+import { extractCalendarProps } from '../../componentUpdater';
 import constants from '../../commons/constants';
-import {UpdateSources} from '../commons';
-import {sameWeek} from '../../dateutils';
-import {DateData} from '../../types';
+import { UpdateSources } from '../commons';
+import { sameWeek } from '../../dateutils';
+import { DateData } from '../../types';
 
 export interface WeekCalendarProps extends CalendarListProps {
   /** whether to have shadow/elevation for the calendar */
   allowShadow?: boolean;
+  passedContext?: React.Context<any>
 }
 
 const NUMBER_OF_PAGES = 50;
 const DEFAULT_PAGE_HEIGHT = 48;
 
 const WeekCalendar = (props: WeekCalendarProps) => {
-  const {current, firstDay = 0, markedDates, allowShadow = true, hideDayNames, theme, calendarWidth, calendarHeight = DEFAULT_PAGE_HEIGHT, testID} = props;
-  const context = useContext(CalendarContext);
-  const {date, updateSource} = context;
+  const {
+    current,
+    firstDay = 0,
+    markedDates,
+    allowShadow = true,
+    passedContext,
+    hideDayNames,
+    theme,
+    calendarWidth,
+    calendarHeight = DEFAULT_PAGE_HEIGHT,
+    testID,
+  } = props;
+  const context = useContext(passedContext || CalendarContext);
+  const { date, updateSource } = context;
   const style = useRef(styleConstructor(theme));
   const list = useRef();
-  const [items, setItems] = useState(getDatesArray(current || date, firstDay, NUMBER_OF_PAGES));
+  const [items, setItems] = useState(
+    getDatesArray(current || date, firstDay, NUMBER_OF_PAGES)
+  );
 
   const extraData = {
     current,
     date: context.date,
-    firstDay
+    firstDay,
   };
 
   const containerWidth = calendarWidth || constants.screenWidth;
   const weekStyle = useMemo(() => {
-    return [{width: containerWidth}, props.style];
+    return [{ width: containerWidth }, props.style];
   }, [containerWidth, props.style]);
 
   useEffect(() => {
     if (updateSource !== UpdateSources.WEEK_SCROLL) {
-      const pageIndex = items.findIndex(item => sameWeek(item, date, firstDay));
+      const pageIndex = items.findIndex((item) => sameWeek(item, date, firstDay));
       // @ts-expect-error
       list.current?.scrollToOffset?.(pageIndex * containerWidth, 0, false);
     }
@@ -59,7 +80,7 @@ const WeekCalendar = (props: WeekCalendarProps) => {
   );
 
   const onPageChange = useCallback(
-    (pageIndex: number, _prevPage, {scrolledByUser}) => {
+    (pageIndex: number, _prevPage, { scrolledByUser }) => {
       if (scrolledByUser) {
         context?.setDate(items[pageIndex], UpdateSources.WEEK_SCROLL);
       }
@@ -68,7 +89,7 @@ const WeekCalendar = (props: WeekCalendarProps) => {
   );
 
   const reloadPages = useCallback(
-    pageIndex => {
+    (pageIndex) => {
       const date = items[pageIndex];
       setItems(getDatesArray(date, firstDay, NUMBER_OF_PAGES));
     },
@@ -77,8 +98,8 @@ const WeekCalendar = (props: WeekCalendarProps) => {
 
   const renderItem = useCallback(
     (_type: any, item: string) => {
-      const {allowShadow, ...calendarListProps} = props;
-      const {/* style,  */ ...others} = extractCalendarProps(calendarListProps);
+      const { allowShadow, ...calendarListProps } = props;
+      const { /* style,  */ ...others } = extractCalendarProps(calendarListProps);
 
       const isSameWeek = sameWeek(item, date, firstDay);
 
@@ -101,11 +122,14 @@ const WeekCalendar = (props: WeekCalendarProps) => {
   return (
     <View
       testID={testID}
-      style={[allowShadow && style.current.containerShadow, !hideDayNames && style.current.containerWrapper]}
+      style={[
+        allowShadow && style.current.containerShadow,
+        !hideDayNames && style.current.containerWrapper,
+      ]}
     >
       {!hideDayNames && (
         <View style={[style.current.week, style.current.weekCalendar]}>
-          <WeekDaysNames firstDay={firstDay} style={style.current.dayHeader}/>
+          <WeekDaysNames firstDay={firstDay} style={style.current.dayHeader} />
         </View>
       )}
       <View>
@@ -124,7 +148,7 @@ const WeekCalendar = (props: WeekCalendarProps) => {
           pageWidth={containerWidth}
           onPageChange={onPageChange}
           scrollViewProps={{
-            showsHorizontalScrollIndicator: false
+            showsHorizontalScrollIndicator: false,
           }}
         />
       </View>
