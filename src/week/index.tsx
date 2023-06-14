@@ -9,7 +9,7 @@ import React, {
 import { View } from 'react-native';
 import XDate from 'xdate';
 import InfiniteList from '../infinite-list';
-import Week from '../week';
+import Week from './week';
 import WeekDaysNames from '../commons/WeekDaysNames';
 import { CalendarListProps } from '../calendar-list';
 import CalendarContext from './Context';
