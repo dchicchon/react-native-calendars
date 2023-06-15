@@ -1,5 +1,14 @@
-export const omit = (keys: any, obj: any) => {
-  return Object.fromEntries(Object.entries(obj).filter(([k]) => !keys.includes(k)));
+export const omit = (object: any, paths: any) => {
+  const result = {};
+
+  for (const key in object) {
+    if (object.hasOwnProperty(key) && !paths.includes(key)) {
+      // @ts-expect-error
+      result[key] = object[key];
+    }
+  }
+
+  return result;
 };
 export const some = (collection: any, predicate: any) => {
   if (Array.isArray(collection)) {
@@ -53,21 +62,21 @@ export const get = (object: Object, path: any, defaultValue?: any) => {
 };
 
 export const includes = (collection: any, value: any, fromIndex = 0) => {
-    if (Array.isArray(collection)) {
-      for (let i = fromIndex; i < collection.length; i++) {
-        if (collection[i] === value) {
-          return true;
-        }
-      }
-    } else if (typeof collection === 'string') {
-      return collection.includes(value, fromIndex);
-    } else if (typeof collection === 'object' && collection !== null) {
-      for (let key in collection) {
-        if (collection.hasOwnProperty(key) && collection[key] === value) {
-          return true;
-        }
+  if (Array.isArray(collection)) {
+    for (let i = fromIndex; i < collection.length; i++) {
+      if (collection[i] === value) {
+        return true;
       }
     }
-  
-    return false;
+  } else if (typeof collection === 'string') {
+    return collection.includes(value, fromIndex);
+  } else if (typeof collection === 'object' && collection !== null) {
+    for (let key in collection) {
+      if (collection.hasOwnProperty(key) && collection[key] === value) {
+        return true;
+      }
+    }
   }
+
+  return false;
+};
