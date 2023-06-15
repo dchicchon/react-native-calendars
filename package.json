@@ -1,6 +1,6 @@
 {
   "name": "@dchicchon/react-native-calendars",
-  "version": "1.22.10",
+  "version": "1.22.11",
   "main": "src/index.ts",
   "types": "src/index.d.ts",
   "description": "React Native Calendar Components",
