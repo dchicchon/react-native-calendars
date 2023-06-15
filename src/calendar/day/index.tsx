@@ -7,38 +7,16 @@ import React, { useMemo } from 'react';
 import { formatNumbers, isToday } from '../../dateutils';
 import { getDefaultLocale } from '../../services';
 // import { xdateToData } from '../../interface';
+import {omit, some, isEqual} from '../../utils';
 import { DateData } from '../../types';
 import BasicDay, { BasicDayProps } from './basic';
 // import PeriodDay from './period';
-
-const omit = (keys: any, obj: any) => {
-  return Object.fromEntries(Object.entries(obj).filter(([k]) => !keys.includes(k)));
-};
-const some = (collection: any, predicate: any) => {
-  if (Array.isArray(collection)) {
-    for (let i = 0; i < collection.length; i++) {
-      if (predicate(collection[i], i, collection)) {
-        return true;
-      }
-    }
-  } else if (typeof collection === 'object' && collection !== null) {
-    for (let key in collection) {
-      if (collection.hasOwnProperty(key) && predicate(collection[key], key, collection)) {
-        return true;
-      }
-    }
-  }
-  return false;
-};
-
-const isEqual = (obj1: any, obj1copy: any) => {
-  JSON.stringify(obj1) === JSON.stringify(obj1copy);
-};
 
 function areEqual(prevProps: DayProps, nextProps: DayProps) {
   const prevPropsWithoutMarkDates = omit(prevProps, 'marking');
   const nextPropsWithoutMarkDates = omit(nextProps, 'marking');
   const didPropsChange = some(prevPropsWithoutMarkDates, function (value: any, key: any) {
+    // @ts-expect-error
     return value !== nextPropsWithoutMarkDates[key];
   });
   const isMarkingEqual = isEqual(prevProps.marking, nextProps.marking);
