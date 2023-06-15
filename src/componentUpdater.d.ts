@@ -6,9 +6,7 @@ import { AgendaProps } from './agenda';
 import { ReservationListProps } from './agenda/reservation-list';
 import { MarkingProps } from './calendar/day/marking';
 export declare function shouldUpdate(props: any, newProps: any, paths: string[]): boolean;
-export declare function extractComponentProps(component: any, props: any, ignoreProps?: string[]): {
-    [k: string]: unknown;
-};
+export declare function extractComponentProps(component: any, props: any, ignoreProps?: string[]): {};
 export declare function extractDotProps(props: MarkingProps): {
     theme: import("./types").Theme | undefined;
     color: string | undefined;

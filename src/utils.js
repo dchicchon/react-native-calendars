@@ -1,5 +1,12 @@
-export const omit = (keys, obj) => {
-    return Object.fromEntries(Object.entries(obj).filter(([k]) => !keys.includes(k)));
+export const omit = (object, paths) => {
+    const result = {};
+    for (const key in object) {
+        if (object.hasOwnProperty(key) && !paths.includes(key)) {
+            // @ts-expect-error
+            result[key] = object[key];
+        }
+    }
+    return result;
 };
 export const some = (collection, predicate) => {
     if (Array.isArray(collection)) {
