@@ -1,16 +1,10 @@
-import {CalendarProps} from './calendar';
-import {CalendarListProps} from './calendar-list';
-import {AgendaProps} from './agenda';
-import {ReservationListProps} from './agenda/reservation-list';
+import { CalendarProps } from './calendar';
+import { CalendarListProps } from './calendar-list';
+import { AgendaProps } from './agenda';
+import { ReservationListProps } from './agenda/reservation-list';
 import { omit, isEqual, pickBy, get, includes } from './utils';
 
-import {MarkingProps} from './calendar/day/marking';
-
-// const get = require('lodash/get');
-// const omit = require('lodash/omit');
-// const pickBy = require('lodash/pickBy');
-// const isEqual = require('lodash/isEqual');
-// const includes = require('lodash/includes');
+import { MarkingProps } from './calendar/day/marking';
 
 export function shouldUpdate(props: any, newProps: any, paths: string[]) {
   for (let i = 0; i < paths.length; i++) {
@@ -24,7 +18,11 @@ export function shouldUpdate(props: any, newProps: any, paths: string[]) {
 }
 
 // TODO: remove
-export function extractComponentProps(component: any, props: any, ignoreProps?: string[]) {
+export function extractComponentProps(
+  component: any,
+  props: any,
+  ignoreProps?: string[]
+) {
   const componentPropTypes = component.propTypes;
   if (componentPropTypes) {
     const keys = Object.keys(componentPropTypes);
@@ -38,15 +36,7 @@ export function extractComponentProps(component: any, props: any, ignoreProps?: 
 }
 
 export function extractDotProps(props: MarkingProps) {
-  const {
-    theme,
-    color,
-    marked,
-    selected,
-    disabled,
-    inactive,
-    today
-  } = props;
+  const { theme, color, marked, selected, disabled, inactive, today } = props;
 
   const dotProps = {
     theme,
@@ -55,7 +45,7 @@ export function extractDotProps(props: MarkingProps) {
     selected,
     disabled,
     inactive,
-    today
+    today,
   };
 
   return dotProps;
@@ -73,7 +63,7 @@ export function extractDayProps(props: CalendarProps) {
     disableAllTouchEventsForDisabledDays,
     disableAllTouchEventsForInactiveDays,
     dayComponent,
-    testID
+    testID,
   } = props;
 
   const dayProps = {
@@ -87,7 +77,7 @@ export function extractDayProps(props: CalendarProps) {
     disableAllTouchEventsForDisabledDays,
     disableAllTouchEventsForInactiveDays,
     dayComponent,
-    testID
+    testID,
   };
 
   return dayProps;
@@ -116,7 +106,7 @@ export function extractHeaderProps(props: CalendarProps) {
     numberOfDays,
     current,
     timelineLeftInset,
-    testID
+    testID,
   } = props;
 
   const headerProps = {
@@ -141,7 +131,7 @@ export function extractHeaderProps(props: CalendarProps) {
     numberOfDays,
     current,
     timelineLeftInset,
-    testID
+    testID,
   };
 
   return headerProps;
@@ -173,7 +163,6 @@ export function extractCalendarProps(props: CalendarListProps) {
 }
 
 export function extractCalendarListProps(props: AgendaProps) {
-
   const {
     // Agenda props
     loadItemsForMonth,
@@ -270,15 +259,8 @@ export function extractReservationListProps(props: AgendaProps) {
 }
 
 export function extractReservationProps(props: ReservationListProps) {
-  const {
-    date,
-    item,
-    theme,
-    rowHasChanged,
-    renderDay,
-    renderItem,
-    renderEmptyDate
-  } = props;
+  const { date, item, theme, rowHasChanged, renderDay, renderItem, renderEmptyDate } =
+    props;
 
   const reservationProps = {
     date,
@@ -287,7 +269,7 @@ export function extractReservationProps(props: ReservationListProps) {
     rowHasChanged,
     renderDay,
     renderItem,
-    renderEmptyDate
+    renderEmptyDate,
   };
 
   return reservationProps;

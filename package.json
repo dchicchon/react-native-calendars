@@ -17,9 +17,10 @@
     "xcode": "open ios/CalendarsExample.xcworkspace/",
     "pod-install": "pod install --project-directory=ios"
   },
+  "homepage": "https://github.com/dchicchon/react-native-calendars",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wix/react-native-calendars"
+    "url": "git+https://github.com/dchicchon/react-native-calendars"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
