@@ -46,7 +46,7 @@ export function onSameDateRange({
   return aWeek === bWeek;
 }
 
-export function sameWeek(a: string, b: string, firstDayOfWeek: number) {
+export function sameWeek(a: string, b: any, firstDayOfWeek: number) {
   const weekDates = getWeekDates(a, firstDayOfWeek, 'yyyy-MM-dd');
   const element = weekDates instanceof XDate ? new XDate(b) : b;
   return weekDates?.includes(element);

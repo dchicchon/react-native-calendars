@@ -1,7 +1,7 @@
 import XDate from 'xdate';
 import React, {useRef, useMemo, useCallback} from 'react';
 import {View} from 'react-native';
-import isEqual from 'lodash/isEqual';
+// import isEqual from 'lodash/isEqual';
 
 import {getPartialWeekDates, getWeekDates, sameMonth} from '../dateutils';
 import {parseDate, toMarkingFormat} from '../interface';
@@ -10,18 +10,18 @@ import {extractDayProps} from '../componentUpdater';
 import styleConstructor from './style';
 import {CalendarProps} from '../calendar';
 import Day from '../calendar/day/index';
-import {CalendarContextProps} from './Context';
+// import {CalendarContextProps} from './Context';
 
 export type WeekProps = CalendarProps & {
-  context?: CalendarContextProps;
+  // context?: CalendarContextProps;
 };
 
-function arePropsEqual(prevProps: WeekProps, nextProps: WeekProps) {
-  const {context: prevContext, markedDates: prevMarkings, ...prevOthers} = prevProps;
-  const {context: nextContext, markedDates: nextMarkings, ...nextOthers} = nextProps;
+// function arePropsEqual(prevProps: WeekProps, nextProps: WeekProps) {
+//   const {context: prevContext, markedDates: prevMarkings, ...prevOthers} = prevProps;
+//   const {context: nextContext, markedDates: nextMarkings, ...nextOthers} = nextProps;
 
-  return isEqual(prevContext, nextContext) && isEqual(prevMarkings, nextMarkings) && isEqual(prevOthers, nextOthers);
-}
+//   return isEqual(prevContext, nextContext) && isEqual(prevMarkings, nextMarkings) && isEqual(prevOthers, nextOthers);
+// }
 
 const Week = React.memo((props: WeekProps) => {
   const {
@@ -103,7 +103,7 @@ const Week = React.memo((props: WeekProps) => {
       </View>
     </View>
   );
-}, arePropsEqual);
+});
 
 export default Week;
 
