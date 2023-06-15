@@ -21,7 +21,7 @@ export interface WeekCalendarProps extends CalendarListProps {
   updateSource: string;
 }
 
-const NUMBER_OF_PAGES = 50;
+const NUMBER_OF_PAGES = 25;
 const DEFAULT_PAGE_HEIGHT = 48;
 
 const WeekCalendar = (props: WeekCalendarProps) => {
@@ -30,11 +30,11 @@ const WeekCalendar = (props: WeekCalendarProps) => {
     firstDay = 0,
     markedDates,
     allowShadow = true,
-    hideDayNames,
+    // hideDayNames,
     theme,
-    calendarWidth,
+    // calendarWidth,
     calendarHeight = DEFAULT_PAGE_HEIGHT,
-    testID,
+    // testID,
     updateSource,
   } = props;
   // const context = useContext(CalendarContext);
@@ -49,7 +49,7 @@ const WeekCalendar = (props: WeekCalendarProps) => {
     firstDay,
   };
 
-  const containerWidth = calendarWidth || constants.screenWidth;
+  const containerWidth = constants.screenWidth;
   const weekStyle = useMemo(() => {
     return [{ width: containerWidth }, props.style];
   }, [containerWidth, props.style]);
@@ -107,7 +107,6 @@ const WeekCalendar = (props: WeekCalendarProps) => {
           style={weekStyle}
           markedDates={markedDates}
           onDayPress={onDayPress}
-          //   context={context}
         />
       );
     },
@@ -116,17 +115,17 @@ const WeekCalendar = (props: WeekCalendarProps) => {
 
   return (
     <View
-      testID={testID}
+      // testID={testID}
       style={[
         allowShadow && style.current.containerShadow,
-        !hideDayNames && style.current.containerWrapper,
+        style.current.containerWrapper,
       ]}
     >
-      {!hideDayNames && (
+      {
         <View style={[style.current.week, style.current.weekCalendar]}>
           <WeekDaysNames firstDay={firstDay} style={style.current.dayHeader} />
         </View>
-      )}
+      }
       <View>
         <InfiniteList
           key="week-list"

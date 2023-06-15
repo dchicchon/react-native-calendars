@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
-import isEmpty from 'lodash/isEmpty';
+// import isEmpty from 'lodash/isEmpty';
 import React, {useRef, useState, useEffect, useCallback, useMemo} from 'react';
 import {View, ViewStyle, StyleProp} from 'react-native';
 // @ts-expect-error
@@ -198,7 +198,6 @@ const Calendar = (props: CalendarProps & ContextProp) => {
     }
 
     const dateString = toMarkingFormat(day);
-    const isControlled = isEmpty(props.context);
 
     return (
       <View style={style.current.dayContainer} key={id}>
@@ -206,7 +205,7 @@ const Calendar = (props: CalendarProps & ContextProp) => {
           {...dayProps}
           testID={`${testID}.day_${dateString}`}
           date={dateString}
-          state={getState(day, currentMonth, props, isControlled)}
+          state={getState(day, currentMonth, props)}
           marking={markedDates?.[dateString]}
           onPress={_onDayPress}
           onLongPress={onLongPressDay}

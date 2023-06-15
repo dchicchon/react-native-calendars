@@ -15,7 +15,6 @@ export interface PeriodDayProps extends ViewProps {
   marking?: MarkingProps;
   state?: DayState;
   onPress?: (date?: DateData) => void;
-  onLongPress?: (date?: DateData) => void;
   accessibilityLabel?: string;
   testID?: string;
 }
@@ -29,7 +28,7 @@ type MarkingStyle = {
 }
 
 const PeriodDay = (props: PeriodDayProps) => {
-  const {theme, marking, date, onPress, onLongPress, state, accessibilityLabel, testID, children} = props;
+  const {theme, marking, date, onPress, state, accessibilityLabel, testID, children} = props;
   const dateData = date ? xdateToData(date) : undefined;
   const style = useRef(styleConstructor(theme));
 
@@ -110,11 +109,11 @@ const PeriodDay = (props: PeriodDayProps) => {
       textStyle.push(style.current.todayText);
     }
 
-    if (marking) {
-      if (markingStyle.textStyle) {
-        textStyle.push(markingStyle.textStyle);
-      }
-    }
+    // if (marking) {
+    //   if (markingStyle.textStyle) {
+    //     textStyle.push(markingStyle.textStyle);
+    //   }
+    // }
 
     return textStyle;
   }, [marking, state]);
@@ -155,18 +154,12 @@ const PeriodDay = (props: PeriodDayProps) => {
     onPress?.(dateData);
   }, [onPress]);
 
-  const _onLongPress = useCallback(() => {
-    onLongPress?.(dateData);
-  }, [onLongPress]);
-    
   const Component = marking ? TouchableWithoutFeedback : TouchableOpacity;
   
   return (
     <Component
       testID={testID}
       onPress={_onPress}
-      onLongPress={_onLongPress}
-      disabled={marking?.disableTouchEvent}
       accessible
       accessibilityRole={marking?.disableTouchEvent ? undefined : 'button'}
       accessibilityLabel={accessibilityLabel}

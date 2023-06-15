@@ -1,21 +1,44 @@
-import omit from 'lodash/omit';
-import isEqual from 'lodash/isEqual';
-import some from 'lodash/some';
+// import omit from 'lodash/omit';
+// import isEqual from 'lodash/isEqual';
+// import some from 'lodash/some';
 import XDate from 'xdate';
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 
-import {formatNumbers, isToday} from '../../dateutils';
-import {getDefaultLocale} from '../../services';
-import {xdateToData} from '../../interface';
-import {DateData} from '../../types';
-import BasicDay, {BasicDayProps} from './basic';
-import PeriodDay from './period';
+import { formatNumbers, isToday } from '../../dateutils';
+import { getDefaultLocale } from '../../services';
+// import { xdateToData } from '../../interface';
+import { DateData } from '../../types';
+import BasicDay, { BasicDayProps } from './basic';
+// import PeriodDay from './period';
+
+const omit = (keys: any, obj: any) => {
+  return Object.fromEntries(Object.entries(obj).filter(([k]) => !keys.includes(k)));
+};
+const some = (collection: any, predicate: any) => {
+  if (Array.isArray(collection)) {
+    for (let i = 0; i < collection.length; i++) {
+      if (predicate(collection[i], i, collection)) {
+        return true;
+      }
+    }
+  } else if (typeof collection === 'object' && collection !== null) {
+    for (let key in collection) {
+      if (collection.hasOwnProperty(key) && predicate(collection[key], key, collection)) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+const isEqual = (obj1: any, obj1copy: any) => {
+  JSON.stringify(obj1) === JSON.stringify(obj1copy);
+};
 
 function areEqual(prevProps: DayProps, nextProps: DayProps) {
   const prevPropsWithoutMarkDates = omit(prevProps, 'marking');
   const nextPropsWithoutMarkDates = omit(nextProps, 'marking');
-  const didPropsChange = some(prevPropsWithoutMarkDates, function (value, key) {
-    //@ts-expect-error
+  const didPropsChange = some(prevPropsWithoutMarkDates, function (value: any, key: any) {
     return value !== nextPropsWithoutMarkDates[key];
   });
   const isMarkingEqual = isEqual(prevProps.marking, nextProps.marking);
@@ -24,11 +47,11 @@ function areEqual(prevProps: DayProps, nextProps: DayProps) {
 
 export interface DayProps extends BasicDayProps {
   /** Provide custom day rendering component */
-  dayComponent?: React.ComponentType<DayProps & {date?: DateData}>; // TODO: change 'date' prop type to string by removing it from overriding BasicDay's 'date' prop (breaking change for V2)
+  dayComponent?: React.ComponentType<DayProps & { date?: DateData }>; // TODO: change 'date' prop type to string by removing it from overriding BasicDay's 'date' prop (breaking change for V2)
 }
 
 const Day = React.memo((props: DayProps) => {
-  const {date, marking, dayComponent, markingType} = props;
+  const { date, marking } = props;
   const _date = date ? new XDate(date) : undefined;
   const _isToday = isToday(_date);
 
@@ -48,35 +71,28 @@ const Day = React.memo((props: DayProps) => {
       if (marking.marked) {
         label += 'You have entries for this day ';
       }
-      if (marking.startingDay) {
-        label += 'period start ';
-      }
-      if (marking.endingDay) {
-        label += 'period end ';
-      }
-      if (marking.disabled || marking.disableTouchEvent) {
-        label += 'disabled ';
-      }
     }
     return label;
   }, [marking]);
 
   const getAccessibilityLabel = useMemo(() => {
     const today = getDefaultLocale().today || 'today';
-    const formatAccessibilityLabel = getDefaultLocale().formatAccessibilityLabel || 'dddd d MMMM yyyy';
+    const formatAccessibilityLabel =
+      getDefaultLocale().formatAccessibilityLabel || 'dddd d MMMM yyyy';
 
-    return `${_isToday ? today : ''} ${_date?.toString(formatAccessibilityLabel)} ${markingAccessibilityLabel}`;
+    return `${_isToday ? today : ''} ${_date?.toString(
+      formatAccessibilityLabel
+    )} ${markingAccessibilityLabel}`;
   }, [_date, marking, _isToday]);
 
-  const Component = dayComponent || (markingType === 'period' ? PeriodDay : BasicDay);
-  const dayComponentProps = dayComponent ? {date: xdateToData(date || new XDate())} : undefined;
+  const Component = BasicDay;
 
   return (
-    //@ts-expect-error
-    <Component {...props} accessibilityLabel={getAccessibilityLabel} {...dayComponentProps}>
+    <Component {...props} accessibilityLabel={getAccessibilityLabel}>
       {formatNumbers(_date?.getDate())}
     </Component>
   );
+  // @ts-expect-error
 }, areEqual) as any;
 
 export default Day;

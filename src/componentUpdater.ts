@@ -2,18 +2,20 @@ import {CalendarProps} from './calendar';
 import {CalendarListProps} from './calendar-list';
 import {AgendaProps} from './agenda';
 import {ReservationListProps} from './agenda/reservation-list';
+import { omit, isEqual, pickBy, get, includes } from './utils';
 
 import {MarkingProps} from './calendar/day/marking';
 
-const get = require('lodash/get');
-const omit = require('lodash/omit');
-const pickBy = require('lodash/pickBy');
-const isEqual = require('lodash/isEqual');
-const includes = require('lodash/includes');
+// const get = require('lodash/get');
+// const omit = require('lodash/omit');
+// const pickBy = require('lodash/pickBy');
+// const isEqual = require('lodash/isEqual');
+// const includes = require('lodash/includes');
 
 export function shouldUpdate(props: any, newProps: any, paths: string[]) {
   for (let i = 0; i < paths.length; i++) {
     const equals = isEqual(get(props, paths[i]), get(newProps, paths[i]));
+    // @ts-expect-error
     if (!equals) {
       return true;
     }
