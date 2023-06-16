@@ -66,7 +66,6 @@ const WeekCalendar = (props: WeekCalendarProps) => {
 
   const onDayPress = useCallback(
     (dateData: DateData) => {
-      // context.setDate?.(dateData.dateString, UpdateSources.DAY_PRESS);
       props.onDayPress?.(dateData);
     },
     [props.onDayPress]
@@ -77,7 +76,6 @@ const WeekCalendar = (props: WeekCalendarProps) => {
       if (scrolledByUser) {
         props.onPageChange?.(items[pageIndex]);
         // we should set date here?
-        // context?.setDate(items[pageIndex], UpdateSources.WEEK_SCROLL);
       }
     },
     [items]

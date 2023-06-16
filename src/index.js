@@ -1,12 +1,8 @@
 export { default as Calendar } from './calendar';
-export type { CalendarProps } from './calendar';
 export { default as CalendarList } from './calendar-list';
-// export { default as NewCalendarList } from './calendar-list/new';
-export type { CalendarListProps } from './calendar-list';
 // export { default as Agenda } from './agenda';
 // export type { AgendaProps } from './agenda';
 export { default as WeekCalendar } from './week/new';
-export type { WeekCalendarProps } from './week';
 // export { default as WeekCalendar } from './expandableCalendar/WeekCalendar/new';
 // export type { WeekCalendarProps } from './expandableCalendar/WeekCalendar';
 // export { default as AgendaList } from './expandableCalendar/agendaList';
@@ -16,5 +12,4 @@ export type { WeekCalendarProps } from './week';
 // export type { CalendarContextProviderProps } from './expandableCalendar/Context/Provider';
 // export { default as asCalendarConsumer } from './expandableCalendar/asCalendarConsumer';
 export { default as CalendarUtils } from './services';
-export type { DateData, AgendaEntry, AgendaSchedule } from './types';
 export { default as LocaleConfig } from 'xdate';
