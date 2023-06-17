@@ -1,3 +1,5 @@
+// import { AgendaProps } from './agenda';
+// import { ReservationListProps } from './agenda/reservation-list';
 import { omit, isEqual, pickBy, get, includes } from './utils';
 export function shouldUpdate(props, newProps, paths) {
     for (let i = 0; i < paths.length; i++) {
@@ -33,14 +35,16 @@ export function extractDotProps(props) {
     return dotProps;
 }
 export function extractDayProps(props) {
-    const { state, marking, markingType, theme, onPress, onLongPress, date, disableAllTouchEventsForDisabledDays, disableAllTouchEventsForInactiveDays, dayComponent, testID, } = props;
+    const { state, marking, markingType, theme, onPress, 
+    // onLongPress,
+    date, disableAllTouchEventsForDisabledDays, disableAllTouchEventsForInactiveDays, dayComponent, testID, } = props;
     const dayProps = {
         state,
         marking,
         markingType,
         theme,
         onPress,
-        onLongPress,
+        // onLongPress,
         date,
         disableAllTouchEventsForDisabledDays,
         disableAllTouchEventsForInactiveDays,
@@ -81,71 +85,108 @@ export function extractCalendarProps(props) {
     const { pastScrollRange, futureScrollRange, calendarWidth, calendarHeight, calendarStyle, staticHeader, showScrollIndicator, animateScroll, scrollEnabled, scrollsToTop, pagingEnabled, horizontal, keyboardShouldPersistTaps, keyExtractor, onEndReachedThreshold, onEndReached, nestedScrollEnabled, ...others } = props;
     return others;
 }
-export function extractCalendarListProps(props) {
-    const { 
-    // Agenda props
-    loadItemsForMonth, onCalendarToggled, renderKnob, selected, hideKnob, showClosingKnob, 
-    // ReservationList props
-    items, selectedDay, topDay, onDayChange, showOnlySelectedDayItems, renderEmptyData, 
-    // onScroll,
-    // onScrollBeginDrag,
-    // onScrollEndDrag,
-    // onMomentumScrollBegin,
-    // onMomentumScrollEnd,
-    // refreshControl,
-    // refreshing,
-    // onRefresh,
-    reservationsKeyExtractor, 
-    // Reservation props
-    date, item, rowHasChanged, 
-    // renderDay,
-    renderItem, renderEmptyDate, ...others } = props;
-    return others;
-}
-export function extractReservationListProps(props) {
-    const { 
-    // ReservationList props
-    items, selectedDay, topDay, onDayChange, showOnlySelectedDayItems, renderEmptyData, onScroll, onScrollBeginDrag, onScrollEndDrag, onMomentumScrollBegin, onMomentumScrollEnd, refreshControl, refreshing, onRefresh, reservationsKeyExtractor, 
-    // Reservation props
-    date, item, theme, rowHasChanged, renderDay, renderItem, renderEmptyDate, } = props;
-    const ReservationListProps = {
-        // ReservationList props
-        items,
-        selectedDay,
-        topDay,
-        onDayChange,
-        showOnlySelectedDayItems,
-        renderEmptyData,
-        onScroll,
-        onScrollBeginDrag,
-        onScrollEndDrag,
-        onMomentumScrollBegin,
-        onMomentumScrollEnd,
-        refreshControl,
-        refreshing,
-        onRefresh,
-        reservationsKeyExtractor,
-        // Reservation props
-        date,
-        item,
-        theme,
-        rowHasChanged,
-        renderDay,
-        renderItem,
-        renderEmptyDate,
-    };
-    return ReservationListProps;
-}
-export function extractReservationProps(props) {
-    const { date, item, theme, rowHasChanged, renderDay, renderItem, renderEmptyDate } = props;
-    const reservationProps = {
-        date,
-        item,
-        theme,
-        rowHasChanged,
-        renderDay,
-        renderItem,
-        renderEmptyDate,
-    };
-    return reservationProps;
-}
+// export function extractCalendarListProps(props: AgendaProps) {
+//   const {
+//     // Agenda props
+//     loadItemsForMonth,
+//     onCalendarToggled,
+//     renderKnob,
+//     selected,
+//     hideKnob,
+//     showClosingKnob,
+//     // ReservationList props
+//     items,
+//     selectedDay,
+//     topDay,
+//     onDayChange,
+//     showOnlySelectedDayItems,
+//     renderEmptyData,
+//     // onScroll,
+//     // onScrollBeginDrag,
+//     // onScrollEndDrag,
+//     // onMomentumScrollBegin,
+//     // onMomentumScrollEnd,
+//     // refreshControl,
+//     // refreshing,
+//     // onRefresh,
+//     reservationsKeyExtractor,
+//     // Reservation props
+//     date,
+//     item,
+//     rowHasChanged,
+//     // renderDay,
+//     renderItem,
+//     renderEmptyDate,
+//     ...others
+//   } = props;
+//   return others;
+// }
+// export function extractReservationListProps(props: AgendaProps) {
+//   const {
+//     // ReservationList props
+//     items,
+//     selectedDay,
+//     topDay,
+//     onDayChange,
+//     showOnlySelectedDayItems,
+//     renderEmptyData,
+//     onScroll,
+//     onScrollBeginDrag,
+//     onScrollEndDrag,
+//     onMomentumScrollBegin,
+//     onMomentumScrollEnd,
+//     refreshControl,
+//     refreshing,
+//     onRefresh,
+//     reservationsKeyExtractor,
+//     // Reservation props
+//     date,
+//     item,
+//     theme,
+//     rowHasChanged,
+//     renderDay,
+//     renderItem,
+//     renderEmptyDate,
+//   } = props;
+//   const ReservationListProps = {
+//     // ReservationList props
+//     items,
+//     selectedDay,
+//     topDay,
+//     onDayChange,
+//     showOnlySelectedDayItems,
+//     renderEmptyData,
+//     onScroll,
+//     onScrollBeginDrag,
+//     onScrollEndDrag,
+//     onMomentumScrollBegin,
+//     onMomentumScrollEnd,
+//     refreshControl,
+//     refreshing,
+//     onRefresh,
+//     reservationsKeyExtractor,
+//     // Reservation props
+//     date,
+//     item,
+//     theme,
+//     rowHasChanged,
+//     renderDay,
+//     renderItem,
+//     renderEmptyDate,
+//   };
+//   return ReservationListProps;
+// }
+// export function extractReservationProps(props: ReservationListProps) {
+//   const { date, item, theme, rowHasChanged, renderDay, renderItem, renderEmptyDate } =
+//     props;
+//   const reservationProps = {
+//     date,
+//     item,
+//     theme,
+//     rowHasChanged,
+//     renderDay,
+//     renderItem,
+//     renderEmptyDate,
+//   };
+//   return reservationProps;
+// }

@@ -1,4 +1,3 @@
-/// <reference types="xdate" />
 import { ViewStyle, TextStyle } from 'react-native';
 import { MarkingProps } from './calendar/day/marking';
 export type ContextProp = {};
@@ -93,16 +92,4 @@ export interface Theme {
             main?: object;
         };
     };
-}
-export type AgendaEntry = {
-    name: string;
-    height: number;
-    day: string;
-};
-export type AgendaSchedule = {
-    [date: string]: AgendaEntry[];
-};
-export interface DayAgenda {
-    reservation?: AgendaEntry;
-    date?: XDate;
 }

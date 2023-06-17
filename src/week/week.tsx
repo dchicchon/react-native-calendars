@@ -22,7 +22,7 @@ const Week = (props: WeekProps) => {
     current,
     firstDay,
     hideExtraDays,
-    markedDates,
+    // markedDates,
     onDayPress,
     style: propsStyle,
     numberOfDays = 1,
@@ -56,7 +56,7 @@ const Week = (props: WeekProps) => {
           {...dayProps}
           date={dayString}
           state={getState(day, currXdate, props)}
-          marking={markedDates?.[dayString]}
+          // marking={markedDates?.[dayString]}
           onPress={onDayPress}
         />
       </View>

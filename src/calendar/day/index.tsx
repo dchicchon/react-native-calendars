@@ -2,12 +2,15 @@
 // import isEqual from 'lodash/isEqual';
 // import some from 'lodash/some';
 import XDate from 'xdate';
-import React, { useMemo } from 'react';
+import React from 'react';
 
-import { formatNumbers, isToday } from '../../dateutils';
-import { getDefaultLocale } from '../../services';
+import {
+  formatNumbers,
+  // isToday
+} from '../../dateutils';
+// import { getDefaultLocale } from '../../services';
 // import { xdateToData } from '../../interface';
-import {omit, some, isEqual} from '../../utils';
+import { omit, some, isEqual } from '../../utils';
 import { DateData } from '../../types';
 import BasicDay, { BasicDayProps } from './basic';
 // import PeriodDay from './period';
@@ -29,46 +32,50 @@ export interface DayProps extends BasicDayProps {
 }
 
 const Day = React.memo((props: DayProps) => {
-  const { date, marking } = props;
+  const {
+    date,
+    // marking
+  } = props;
   const _date = date ? new XDate(date) : undefined;
-  const _isToday = isToday(_date);
+  // const _isToday = isToday(_date);
 
-  const markingAccessibilityLabel = useMemo(() => {
-    let label = '';
+  // const markingAccessibilityLabel = useMemo(() => {
+  //   let label = '';
 
-    if (marking) {
-      if (marking.accessibilityLabel) {
-        return marking.accessibilityLabel;
-      }
-      if (marking.selected) {
-        label += 'selected ';
-        if (!marking.marked) {
-          label += 'You have no entries for this day ';
-        }
-      }
-      if (marking.marked) {
-        label += 'You have entries for this day ';
-      }
-    }
-    return label;
-  }, [marking]);
+  //   if (marking) {
+  //     if (marking.accessibilityLabel) {
+  //       return marking.accessibilityLabel;
+  //     }
+  //     if (marking.selected) {
+  //       label += 'selected ';
+  //       if (!marking.marked) {
+  //         label += 'You have no entries for this day ';
+  //       }
+  //     }
+  //     if (marking.marked) {
+  //       label += 'You have entries for this day ';
+  //     }
+  //   }
+  //   return label;
+  // }, [marking]);
 
-  const getAccessibilityLabel = useMemo(() => {
-    const today = getDefaultLocale().today || 'today';
-    const formatAccessibilityLabel =
-      getDefaultLocale().formatAccessibilityLabel || 'dddd d MMMM yyyy';
+  // const getAccessibilityLabel = useMemo(() => {
+  //   const today = getDefaultLocale().today || 'today';
+  //   const formatAccessibilityLabel =
+  //     getDefaultLocale().formatAccessibilityLabel || 'dddd d MMMM yyyy';
 
-    return `${_isToday ? today : ''} ${_date?.toString(
-      formatAccessibilityLabel
-    )} ${markingAccessibilityLabel}`;
-  }, [_date, marking, _isToday]);
-
-  const Component = BasicDay;
+  //   return `${_isToday ? today : ''} ${_date?.toString(
+  //     formatAccessibilityLabel
+  //   )} ${markingAccessibilityLabel}`;
+  // }, [_date, marking, _isToday]);
 
   return (
-    <Component {...props} accessibilityLabel={getAccessibilityLabel}>
+    <BasicDay
+      {...props}
+      // accessibilityLabel={getAccessibilityLabel}
+    >
       {formatNumbers(_date?.getDate())}
-    </Component>
+    </BasicDay>
   );
   // @ts-expect-error
 }, areEqual) as any;

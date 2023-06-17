@@ -9,7 +9,9 @@ import { extractDayProps } from '../componentUpdater';
 import styleConstructor from './style';
 import Day from '../calendar/day/index';
 const Week = (props) => {
-    const { theme, current, firstDay, hideExtraDays, markedDates, onDayPress, style: propsStyle, numberOfDays = 1, testID, } = props;
+    const { theme, current, firstDay, hideExtraDays, 
+    // markedDates,
+    onDayPress, style: propsStyle, numberOfDays = 1, testID, } = props;
     const style = useRef(styleConstructor(theme));
     const getWeek = useCallback((date) => {
         if (date) {
@@ -27,7 +29,9 @@ const Week = (props) => {
         }
         const dayString = toMarkingFormat(day);
         return (<View style={style.current.dayContainer} key={id}>
-        <Day {...dayProps} date={dayString} state={getState(day, currXdate, props)} marking={markedDates?.[dayString]} onPress={onDayPress}/>
+        <Day {...dayProps} date={dayString} state={getState(day, currXdate, props)} 
+        // marking={markedDates?.[dayString]}
+        onPress={onDayPress}/>
       </View>);
     };
     const renderWeek = () => {

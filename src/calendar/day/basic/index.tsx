@@ -1,11 +1,15 @@
-import React, {Fragment, useCallback, useRef} from 'react';
-import {TouchableOpacity, Text, View, ViewProps} from 'react-native';
+import React, { Fragment, useCallback, useRef } from 'react';
+import {
+  TouchableOpacity,
+  Text,
+  // View,
+  ViewProps,
+} from 'react-native';
 
-import {xdateToData} from '../../../interface';
-import {Theme, DayState, MarkingTypes, DateData} from '../../../types';
+import { xdateToData } from '../../../interface';
+import { Theme, DayState, MarkingTypes, DateData } from '../../../types';
 import styleConstructor from './style';
-import Marking, {MarkingProps} from '../marking';
-
+import Marking, { MarkingProps } from '../marking';
 
 export interface BasicDayProps extends ViewProps {
   state?: DayState;
@@ -18,7 +22,7 @@ export interface BasicDayProps extends ViewProps {
   /** onPress callback */
   onPress?: (date?: DateData) => void;
   /** onLongPress callback */
-  onLongPress?: (date?: DateData) => void;
+  // onLongPress?: (date?: DateData) => void;
   /** The date to return from press callbacks */
   date?: string;
 
@@ -38,86 +42,97 @@ const BasicDay = (props: BasicDayProps) => {
     theme,
     date,
     onPress,
-    onLongPress,
+    // onLongPress,
     markingType,
     marking,
     state,
-    disableAllTouchEventsForDisabledDays,
-    disableAllTouchEventsForInactiveDays,
+    // disableAllTouchEventsForDisabledDays,
+    // disableAllTouchEventsForInactiveDays,
     accessibilityLabel,
     children,
-    testID
+    // testID,
   } = props;
   const style = useRef(styleConstructor(theme));
   const _marking = marking || {};
   const isSelected = _marking.selected || state === 'selected';
-  const isDisabled = typeof _marking.disabled !== 'undefined' ? _marking.disabled : state === 'disabled';
-  const isInactive = _marking?.inactive;
+  // const isDisabled =
+  // typeof _marking.disabled !== 'undefined' ? _marking.disabled : state === 'disabled';
+  // const isInactive = _marking?.inactive;
   const isToday = state === 'today';
-  const isMultiDot = markingType === Marking.markings.MULTI_DOT;
-  const isMultiPeriod = markingType === Marking.markings.MULTI_PERIOD;
-  const isCustom = markingType === Marking.markings.CUSTOM;
+  // const isMultiDot = markingType === Marking.markings.MULTI_DOT;
+  // const isMultiPeriod = markingType === Marking.markings.MULTI_PERIOD;
+  // const isCustom = markingType === Marking.markings.CUSTOM;
   const dateData = date ? xdateToData(date) : undefined;
 
-  const shouldDisableTouchEvent = () => {
-    const {disableTouchEvent} = _marking;
-    let disableTouch = false;
+  // const shouldDisableTouchEvent = () => {
+  // const { disableTouchEvent } = _marking;
+  // let disableTouch = false;
 
-    if (typeof disableTouchEvent === 'boolean') {
-      disableTouch = disableTouchEvent;
-    } else if (typeof disableAllTouchEventsForDisabledDays === 'boolean' && isDisabled) {
-      disableTouch = disableAllTouchEventsForDisabledDays;
-    } else if (typeof disableAllTouchEventsForInactiveDays === 'boolean' && isInactive) {
-      disableTouch = disableAllTouchEventsForInactiveDays;
-    }
-    return disableTouch;
-  };
+  // if (typeof disableTouchEvent === 'boolean') {
+  //   disableTouch = disableTouchEvent;
+  // }
+  //  else if (typeof disableAllTouchEventsForDisabledDays === 'boolean' && isDisabled) {
+  // disableTouch = disableAllTouchEventsForDisabledDays;
+  // } else if (typeof disableAllTouchEventsForInactiveDays === 'boolean' && isInactive) {
+  // disableTouch = disableAllTouchEventsForInactiveDays;
+  // }
+  // return disableTouch;
+  // };
 
   const getContainerStyle = () => {
-    const {customStyles, selectedColor} = _marking;
+    const {
+      // customStyles,
+      selectedColor,
+    } = _marking;
     const styles = [style.current.base];
 
     if (isSelected) {
       styles.push(style.current.selected);
       if (selectedColor) {
-        styles.push({backgroundColor: selectedColor});
+        styles.push({ backgroundColor: selectedColor });
       }
     } else if (isToday) {
       styles.push(style.current.today);
     }
 
     //Custom marking type
-    if (isCustom && customStyles && customStyles.container) {
-      if (customStyles.container.borderRadius === undefined) {
-        customStyles.container.borderRadius = 16;
-      }
-      styles.push(customStyles.container);
-    }
+    // if (isCustom && customStyles && customStyles.container) {
+    //   if (customStyles.container.borderRadius === undefined) {
+    //     customStyles.container.borderRadius = 16;
+    //   }
+    //   styles.push(customStyles.container);
+    // }
 
     return styles;
   };
 
   const getTextStyle = () => {
-    const {customStyles, selectedTextColor} = _marking;
+    const {
+      // customStyles,
+      selectedTextColor,
+    } = _marking;
     const styles = [style.current.text];
 
     if (isSelected) {
       styles.push(style.current.selectedText);
       if (selectedTextColor) {
-        styles.push({color: selectedTextColor});
+        styles.push({ color: selectedTextColor });
       }
-    } else if (isDisabled) {
-      styles.push(style.current.disabledText);
-    } else if (isToday) {
-      styles.push(style.current.todayText);
-    } else if (isInactive) {
-      styles.push(style.current.inactiveText);
     }
+    // else if (isDisabled) {
+    // styles.push(style.current.disabledText);
+    // }
+    else if (isToday) {
+      styles.push(style.current.todayText);
+    }
+    //  else if (isInactive) {
+    // styles.push(style.current.inactiveText);
+    // }
 
     //Custom marking type
-    if (isCustom && customStyles && customStyles.text) {
-      styles.push(customStyles.text);
-    }
+    // if (isCustom && customStyles && customStyles.text) {
+    //   styles.push(customStyles.text);
+    // }
 
     return styles;
   };
@@ -126,25 +141,30 @@ const BasicDay = (props: BasicDayProps) => {
     onPress?.(dateData);
   }, [onPress, date]);
 
-  const _onLongPress = useCallback(() => {
-    onLongPress?.(dateData);
-  }, [onLongPress, date]);
+  // const _onLongPress = useCallback(() => {
+  //   onLongPress?.(dateData);
+  // }, [onLongPress, date]);
 
   const renderMarking = () => {
-    const {marked, dotColor, dots, periods} = _marking;
+    const {
+      // marked,
+      // dotColor,
+      // dots,
+      // periods,
+    } = _marking;
 
     return (
       <Marking
         type={markingType}
         theme={theme}
-        marked={isMultiDot ? true : marked}
+        // marked={isMultiDot ? true : marked}
         selected={isSelected}
-        disabled={isDisabled}
-        inactive={isInactive}
+        // disabled={isDisabled}
+        // inactive={isInactive}
         today={isToday}
-        dotColor={dotColor}
-        dots={dots}
-        periods={periods}
+        // dotColor={dotColor}
+        // dots={dots}
+        // periods={periods}
       />
     );
   };
@@ -167,35 +187,39 @@ const BasicDay = (props: BasicDayProps) => {
   };
 
   const renderContainer = () => {
-    const {activeOpacity} = _marking;
+    const { activeOpacity } = _marking;
 
     return (
       <TouchableOpacity
-        testID={testID}
+        // testID={testID}
         style={getContainerStyle()}
-        disabled={shouldDisableTouchEvent()}
+        // disabled={shouldDisableTouchEvent()}
         activeOpacity={activeOpacity}
-        onPress={!shouldDisableTouchEvent() ? _onPress : undefined}
-        onLongPress={!shouldDisableTouchEvent() ? _onLongPress : undefined}
+        onPress={_onPress}
+        // onPress={!shouldDisableTouchEvent() ? _onPress : undefined}
+        // onLongPress={!shouldDisableTouchEvent() ? _onLongPress : undefined}
         accessible
-        accessibilityRole={isDisabled ? undefined : 'button'}
+        accessibilityRole={'button'}
+        // accessibilityRole={isDisabled ? undefined : 'button'}
         accessibilityLabel={accessibilityLabel}
       >
-        {isMultiPeriod ? renderText() : renderContent()}
+        {renderContent()}
+        {/* {isMultiPeriod ? renderText() : renderContent()} */}
       </TouchableOpacity>
     );
   };
 
-  const renderPeriodsContainer = () => {
-    return (
-      <View style={style.current.container}>
-        {renderContainer()}
-        {renderMarking()}
-      </View>
-    );
-  };
+  // const renderPeriodsContainer = () => {
+  //   return (
+  //     <View style={style.current.container}>
+  //       {renderContainer()}
+  //       {renderMarking()}
+  //     </View>
+  //   );
+  // };
 
-  return isMultiPeriod ? renderPeriodsContainer() : renderContainer();
+  // return isMultiPeriod ? renderPeriodsContainer() : renderContainer();
+  return renderContainer();
 };
 
 export default BasicDay;

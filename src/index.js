@@ -12,4 +12,5 @@ export { default as WeekCalendar } from './week/new';
 // export type { CalendarContextProviderProps } from './expandableCalendar/Context/Provider';
 // export { default as asCalendarConsumer } from './expandableCalendar/asCalendarConsumer';
 export { default as CalendarUtils } from './services';
+// export type { DateData, AgendaEntry, AgendaSchedule } from './types';
 export { default as LocaleConfig } from 'xdate';
